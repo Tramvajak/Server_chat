@@ -21,7 +21,7 @@ namespace Server_Chat
         {
             try
             {
-
+                Sqlite.TestBase();
             }
             catch(Exception ex)
             {
