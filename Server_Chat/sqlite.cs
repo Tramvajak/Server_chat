@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.IO;
 
 namespace Server_Chat
 {
     class Sqlite
     {
-        const string databaseName = @"Server.sqlite";
+        const string databaseName = @"Server.sqlite3";
         /// <summary>
         /// sqlite запрос на создание значений в базе
         /// </summary>
@@ -18,9 +19,12 @@ namespace Server_Chat
         {
             try
             {
-                using (SQLiteConnection connect = new SQLiteConnection("Data Source=" + databaseName))
+                using (SQLiteConnection connect = new SQLiteConnection("Data Source=" + databaseName+";Version=3;"))
                 {
-
+                    connect.Open();
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO Users ('login','password','date-reg') VALUES ('"+_name+"','"+_password+"','"+ DateTime.Now + "')",connect);
+                    command.ExecuteNonQuery();
+                    connect.Close();
                 }
             }
             catch(SQLiteException ex)
@@ -28,17 +32,58 @@ namespace Server_Chat
                 Debug.WriteLine(3, "void Insert_CreateUser: " + ex.Message);
             }
         }
-        public static void TestBase()
+        /// <summary>
+        /// Получения логина и пароля из бд
+        /// </summary>
+        /// <param name="_name">Логин</param>
+        /// <returns>Возвращяет  line (Login;Password)</returns>
+        public static string Select_UserPassword(string _name)
         {
+           
             try
             {
-                using (SQLiteConnection connect = new SQLiteConnection("Data Source=" + databaseName))
+                using (SQLiteConnection connect = new SQLiteConnection("Data Source=" + databaseName + ";Version=3;"))
                 {
-                    SQLiteCommand command = new SQLiteCommand("SELECT * FROM users", connect);
+                    connect.Open();
+                    SQLiteCommand command = new SQLiteCommand("SELECT login,password FROM Users WHERE login='" + _name + "'", connect);
                     SQLiteDataReader reader = command.ExecuteReader();
+                    
+                    string line = String.Empty;
+                    
+                    foreach (DbDataRecord record in reader)
+                    {
+                        line = record["login"].ToString()+";"+ record["password"].ToString();
+                        Debug.WriteLine(0, "Table: " + record["login"]);
+
+                    }
+                    connect.Close();
+                    return line;
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                Debug.WriteLine(2, "Test DataBase: " + ex.Message);
+                return null;
+            }
+        }
+        public static void TestBase()
+        {
+            if (File.Exists(databaseName) == false) Debug.WriteLine(0, "Data base file not found");
+            try
+            {
+                using (SQLiteConnection connect = new SQLiteConnection("Data Source=" + databaseName+";Version=3;"))
+                {
+                    connect.Open();
+                    SQLiteCommand command = new SQLiteCommand
+                    {
+                        Connection = connect,
+                        CommandText = "SELECT * FROM Users"
+                    };
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    
                     foreach(DbDataRecord record in reader)
                     {
-                        Debug.WriteLine(0, "Table: " + record["name"]);
+                        Debug.WriteLine(0, "Table: " + record["login"]);
 
                     }
                     connect.Close();

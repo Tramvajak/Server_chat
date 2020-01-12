@@ -19,15 +19,18 @@ namespace Server_Chat
 
         private void btn_StartServer_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Sqlite.TestBase();
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(3, ex.Message);
+            //try
+            //{
+            Sqlite.TestBase();
+            string line = Sqlite.Select_UserPassword("Test");
+            string[] _line = line.Split(';');
+            MessageBox.Show(_line[0], _line[1]);
+            //}
+            //catch(Exception ex)
+            //{
+            //    Debug.WriteLine(3, ex.Message);
 
-            }
+            //}
         }
     }
 }

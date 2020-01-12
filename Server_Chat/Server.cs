@@ -40,7 +40,7 @@ namespace Server_Chat
                 thrListen = new Thread(KeepListening);
                 thrListen.IsBackground = true;
                 thrListen.Start();
-                Debug.WriteLine(1, "Server start Listen port 7777");
+                Debug.WriteLine(1, "Server start Listen port 7770");
 
             }
         }
@@ -92,7 +92,7 @@ namespace Server_Chat
                     }
                     else
                     {
-                        //if()
+                        //if(trylogin)
                     }
                 }
             }
