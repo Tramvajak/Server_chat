@@ -40,7 +40,7 @@ namespace Server_Chat
                 thrListen = new Thread(KeepListening);
                 thrListen.IsBackground = true;
                 thrListen.Start();
-                Debug.WriteLine(1, "Server start Listen port 7777");
+                Debug.WriteLine(1, "Server start Listen port 7770");
 
             }
         }
@@ -79,6 +79,8 @@ namespace Server_Chat
             {
                 srReciver = new StreamReader(tcpClient.GetStream());
                 swSender = new StreamWriter(tcpClient.GetStream());
+                string tcp_client_ip = Convert.ToString(((System.Net.IPEndPoint)tcpClient.Client.RemoteEndPoint).Address);
+                Debug.WriteLine(1, "Connection client (ip:" + tcp_client_ip + ")");
                 string connectMessage = srReciver.ReadLine();
                 string[] mess = connectMessage.Split('|');
                 if (mess[0] != "" && mess[1] != "" && mess[2] != "")

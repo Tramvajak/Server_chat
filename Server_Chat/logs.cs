@@ -32,6 +32,8 @@ namespace Server_Chat
             if (key == 2) msg = String.Format("[" + DateTime.Now + "] [Warring] " + line + Environment.NewLine);
             if (key == 3) msg = String.Format("[" + DateTime.Now + "] [Error] " + line + Environment.NewLine);
             File.AppendAllText(_logPath, msg);
+            MainForm main = new MainForm();
+            main.rich_Logs.AppendText(msg);
             System.Diagnostics.Debug.WriteLine(msg);
         }
         /// <summary>
