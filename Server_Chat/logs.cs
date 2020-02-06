@@ -9,6 +9,8 @@ namespace Server_Chat
 {
     static class Debug
     {
+        public static event StatusChangedEventHandler StatusChanged;
+        private static StatusChangedEventArgs e;
         static readonly string _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
         /// <summary>
         /// Записывает лог в файл
@@ -32,8 +34,8 @@ namespace Server_Chat
             if (key == 2) msg = String.Format("[" + DateTime.Now + "] [Warring] " + line + Environment.NewLine);
             if (key == 3) msg = String.Format("[" + DateTime.Now + "] [Error] " + line + Environment.NewLine);
             File.AppendAllText(_logPath, msg);
-            MainForm main = new MainForm();
-            main.rich_Logs.AppendText(msg);
+            e = new StatusChangedEventArgs(msg); // что бы отправить 
+            OnStatusChanged(e);            
             System.Diagnostics.Debug.WriteLine(msg);
         }
         /// <summary>
@@ -46,6 +48,15 @@ namespace Server_Chat
             string msg = String.Format(line, args);
             File.AppendAllText(_logPath, "[" + DateTime.Now + "] " + msg + Environment.NewLine);
             System.Diagnostics.Debug.WriteLine(msg);
+        }
+        public static void OnStatusChanged(StatusChangedEventArgs e) //что бы отправить  
+        {
+            StatusChangedEventHandler statusHandler = StatusChanged;
+            if(statusHandler !=null)
+            {
+                statusHandler(null, e);
+            }
+
         }
     }
 }

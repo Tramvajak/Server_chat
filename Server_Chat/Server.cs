@@ -33,7 +33,7 @@ namespace Server_Chat
         {
             if(tcpListener == null)
             {
-                tcpListener = new TcpListener(7770);
+                tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"),7770);
                 tcpListener.Start();
                 ServerIsRun = true;
                 Debug.WriteLine(1, "Server is run");
@@ -51,7 +51,8 @@ namespace Server_Chat
                 while(ServerIsRun)
                 {
                     tcpClient = tcpListener.AcceptTcpClient();
-                    
+
+                    Connection conn = new Connection(tcpClient);
                 }
             }
             catch(Exception ex)
@@ -83,8 +84,15 @@ namespace Server_Chat
                 Debug.WriteLine(1, "Connection client (ip:" + tcp_client_ip + ")");
                 string connectMessage = srReciver.ReadLine();
                 string[] mess = connectMessage.Split('|');
-                if (mess[0] != "" && mess[1] != "" && mess[2] != "")
+                if (mess[0] != "" && mess[1] != "" && mess[2] != "")// 0|1|2 name|pass|version
                 {
+                    if(mess[2] != "0.1")
+                    {
+                        swSender.WriteLine("0|This old version! Please check new version!");
+                        swSender.Flush();
+                        CloseConnecion();
+                        return;
+                    }
                     if (Server.htUsers.Contains(mess[0]) == true)
                     {
                         swSender.WriteLine("0|This username already exists.");
@@ -94,7 +102,10 @@ namespace Server_Chat
                     }
                     else
                     {
-                        //if()
+                        if(Server.TryLogin(mess[0],mess[1]))
+                        {
+
+                        }
                     }
                 }
             }

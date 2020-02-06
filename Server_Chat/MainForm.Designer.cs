@@ -31,6 +31,7 @@
             this.btn_StartServer = new System.Windows.Forms.Button();
             this.rich_UsersOnline = new System.Windows.Forms.RichTextBox();
             this.rich_Logs = new System.Windows.Forms.RichTextBox();
+            this.chckBox_DebugMode = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btn_StartServer
@@ -59,17 +60,31 @@
             this.rich_Logs.TabIndex = 2;
             this.rich_Logs.Text = "";
             // 
+            // chckBox_DebugMode
+            // 
+            this.chckBox_DebugMode.AutoSize = true;
+            this.chckBox_DebugMode.Enabled = false;
+            this.chckBox_DebugMode.Location = new System.Drawing.Point(128, 253);
+            this.chckBox_DebugMode.Name = "chckBox_DebugMode";
+            this.chckBox_DebugMode.Size = new System.Drawing.Size(85, 17);
+            this.chckBox_DebugMode.TabIndex = 3;
+            this.chckBox_DebugMode.Text = "DebugMode";
+            this.chckBox_DebugMode.UseVisualStyleBackColor = true;
+            this.chckBox_DebugMode.CheckedChanged += new System.EventHandler(this.chckBox_DebugMode_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 352);
+            this.Controls.Add(this.chckBox_DebugMode);
             this.Controls.Add(this.rich_Logs);
             this.Controls.Add(this.rich_UsersOnline);
             this.Controls.Add(this.btn_StartServer);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -78,6 +93,7 @@
         private System.Windows.Forms.Button btn_StartServer;
         private System.Windows.Forms.RichTextBox rich_UsersOnline;
         public System.Windows.Forms.RichTextBox rich_Logs;
+        private System.Windows.Forms.CheckBox chckBox_DebugMode;
     }
 }
 
