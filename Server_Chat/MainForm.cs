@@ -35,7 +35,7 @@ namespace Server_Chat
             //Debug.WriteLine(2, "Test warring color");
             //Debug.WriteLine(3, "Test Error Color");
             //Debug.WriteLine(0, "Test Debug Color");
-            Sqlite.TestBase();
+            
             //}
             //catch(Exception ex)
             //{
@@ -72,6 +72,54 @@ namespace Server_Chat
                 Debug.WriteLine(0, "DebugMode deactivated");
            
         }
+
+        private void listB_UsersOnline_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listB_UsersOnline.SelectedIndex == -1) return;
+            Debug.WriteLine(0, "List Box Users selected index " + listB_UsersOnline.SelectedIndex.ToString());
+            Debug.WriteLine(0, "Open Selected User form " + listB_UsersOnline.Items[listB_UsersOnline.SelectedIndex]);
+             var user = Sqlite.UsersList.ElementAt(listB_UsersOnline.SelectedIndex);
+            SelectedUserForm suf = new SelectedUserForm(user.login,user.full_name,user.date_reg,user.online,user.last_ip,user.adminlevel.ToString());
+            if(suf.ShowDialog(this) == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            Sqlite.TestBase();
+            foreach (var item in Sqlite.UsersList)
+            {
+                listB_UsersOnline.Items.Add(item.full_name);
+            }
+        }
+
+        private void Timer_Time_Tick(object sender, EventArgs e)
+        {
+            l_Time.Text = DateTime.Now.ToString();
+            foreach (var item in Sqlite.UsersList)
+            {
+                if (item.tcpClient == null) return;
+                else
+                {
+                    foreach (string _item in listB_UsersOnline.Items)
+                    {
+                        if (_item.Contains(item.full_name))
+                        {
+                            //_item += "[Online]";
+                        }
+                    }
+                }
+            }
+        }
+
+        private void rich_Logs_TextChanged(object sender, EventArgs e)
+        {
+            rich_Logs.SelectionStart = rich_Logs.Text.Length;
+            rich_Logs.ScrollToCaret();
+        }
+        
     }
     public static class RichTextBoxExtensions
     {

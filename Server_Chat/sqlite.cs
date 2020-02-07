@@ -86,7 +86,7 @@ namespace Server_Chat
                     {
                         Debug.WriteLine(0, "Table: " + record["Login"]);
                         //new Users( )
-                        //UsersList.Add(new Users(record["Login"], record["FullName"], "0", "0", "0", "0"));
+                        UsersList.Add(new Users(record["Login"].ToString(), record["FullName"].ToString(), "0", "0", "0", 0));
 
                     }
                     connect.Close();

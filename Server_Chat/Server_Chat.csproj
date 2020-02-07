@@ -69,6 +69,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectedUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectedUserForm.Designer.cs">
+      <DependentUpon>SelectedUserForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Server.cs" />
     <Compile Include="Sqlite.cs" />
     <Compile Include="Users.cs" />
@@ -87,6 +93,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SelectedUserForm.resx">
+      <DependentUpon>SelectedUserForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
