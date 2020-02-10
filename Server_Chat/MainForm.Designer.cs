@@ -35,6 +35,10 @@
             this.listB_UsersOnline = new System.Windows.Forms.ListBox();
             this.l_Time = new System.Windows.Forms.Label();
             this.Timer_Time = new System.Windows.Forms.Timer(this.components);
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createUsersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_StartServer
@@ -49,7 +53,7 @@
             // 
             // rich_Logs
             // 
-            this.rich_Logs.Location = new System.Drawing.Point(215, 22);
+            this.rich_Logs.Location = new System.Drawing.Point(215, 27);
             this.rich_Logs.Name = "rich_Logs";
             this.rich_Logs.Size = new System.Drawing.Size(383, 203);
             this.rich_Logs.TabIndex = 2;
@@ -71,7 +75,7 @@
             // listB_UsersOnline
             // 
             this.listB_UsersOnline.FormattingEnabled = true;
-            this.listB_UsersOnline.Location = new System.Drawing.Point(12, 22);
+            this.listB_UsersOnline.Location = new System.Drawing.Point(12, 27);
             this.listB_UsersOnline.Name = "listB_UsersOnline";
             this.listB_UsersOnline.Size = new System.Drawing.Size(197, 199);
             this.listB_UsersOnline.TabIndex = 4;
@@ -89,7 +93,33 @@
             // Timer_Time
             // 
             this.Timer_Time.Enabled = true;
+            this.Timer_Time.Interval = 2000;
             this.Timer_Time.Tick += new System.EventHandler(this.Timer_Time_Tick);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(622, 24);
+            this.menuStrip1.TabIndex = 6;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createUsersToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // createUsersToolStripMenuItem
+            // 
+            this.createUsersToolStripMenuItem.Name = "createUsersToolStripMenuItem";
+            this.createUsersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createUsersToolStripMenuItem.Text = "Create Users";
+            this.createUsersToolStripMenuItem.Click += new System.EventHandler(this.createUsersToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -101,9 +131,13 @@
             this.Controls.Add(this.chckBox_DebugMode);
             this.Controls.Add(this.rich_Logs);
             this.Controls.Add(this.btn_StartServer);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -117,6 +151,9 @@
         private System.Windows.Forms.ListBox listB_UsersOnline;
         private System.Windows.Forms.Label l_Time;
         private System.Windows.Forms.Timer Timer_Time;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createUsersToolStripMenuItem;
     }
 }
 

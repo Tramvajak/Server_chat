@@ -13,6 +13,16 @@ namespace Server_Chat
         private static StatusChangedEventArgs e;
         static readonly string _logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
         /// <summary>
+        /// Отправляет сообщение на форму по event 
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="text"></param>
+        public static void WriteLineEvent(string cmd, string text)
+        {
+            e = new StatusChangedEventArgs(cmd+";;"+text); // что бы отправить 
+            OnStatusChanged(e);
+        }
+        /// <summary>
         /// Записывает лог в файл
         /// </summary>
         /// <param name="line">Строка текста для вывода</param>

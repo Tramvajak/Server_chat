@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,6 +13,7 @@ namespace Server_Chat
 {
     public partial class MainForm : Form
     {
+        private Thread thrAutoKick;
         public MainForm()
         {
             InitializeComponent();
@@ -35,7 +37,10 @@ namespace Server_Chat
             //Debug.WriteLine(2, "Test warring color");
             //Debug.WriteLine(3, "Test Error Color");
             //Debug.WriteLine(0, "Test Debug Color");
-            
+            //thrAutoKick = new Thread(AutoKick);
+            //thrAutoKick.IsBackground = true;
+            //thrAutoKick.Name = "Auto Kick Thread";
+            //thrAutoKick.Start();
             //}
             //catch(Exception ex)
             //{
@@ -43,22 +48,66 @@ namespace Server_Chat
 
             //}
         }
+        private void OnSetOnlineStatus(string name,string status)
+        {
+            if(status =="Online")
+            {
+                var foundUser = Sqlite.UsersList.Find(item => item.full_name == name);
+                for (int i = 0; i < listB_UsersOnline.Items.Count; i++)
+                {
+                    if(listB_UsersOnline.Items[i].ToString() == foundUser.full_name)
+                    {
+                        foundUser.online = "1";
+                        listB_UsersOnline.Items[i] += "[Online]";
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                var foundUser = Sqlite.UsersList.Find(item => item.full_name == name);
+                for (int i = 0; i < listB_UsersOnline.Items.Count; i++)
+                {
+                    if(listB_UsersOnline.Items[i].ToString().Contains(foundUser.full_name))
+                    //if (listB_UsersOnline.Items[i].ToString()+"[Online]" == foundUser.full_name+"[Online]")
+                    {
+                        foundUser.online = "0";
+                        listB_UsersOnline.Items[i] = foundUser.full_name;
+                        return;
+                    }
+                }
+            }
+        }
+        
         private void Log_StatusChanged(object sender, StatusChangedEventArgs e)// объявить что бы принять сообщение
         {
-            
             string msg = e.EventMessage;
-            int startIndex = msg.IndexOf('[',19);
-            int endIndex = msg.IndexOf(']', startIndex);
-            string key = msg.Substring(startIndex+1, endIndex - startIndex-1);
-            Invoke((MethodInvoker)delegate ()
+            if (msg.IndexOf(";;") > 0)
             {
-                if (key == "Debug" && Properties.Settings.Default.DebugMode != "Checked") return;
-                if (key == "Info")  rich_Logs.AppendText(e.EventMessage);
-                if (key == "Debug" ) rich_Logs.AppendText(e.EventMessage, Color.Gray);
-                if (key == "Warring") rich_Logs.AppendText(e.EventMessage, Color.Orange);
-                if (key == "Error") rich_Logs.AppendText(e.EventMessage, Color.Red);
-            });
-            
+                string[] _msg = msg.Split(new char[] {';',';' }); // первая часть|пусто|вторая часть
+                if(_msg[0] == Commands.SetOnlineStatus)
+                {
+                    string[] text = _msg[2].Split('|');
+                    Invoke((MethodInvoker)delegate ()
+                    {
+                        OnSetOnlineStatus(text[0], text[1]);
+                    });
+                }
+            }
+            else
+            {
+                int startIndex = msg.IndexOf('[', 19);
+                int endIndex = msg.IndexOf(']', startIndex);
+                string key = msg.Substring(startIndex + 1, endIndex - startIndex - 1);
+                Invoke((MethodInvoker)delegate ()
+                {
+                    if (key == "Debug" && Properties.Settings.Default.DebugMode != "Checked") return;
+                    if (key == "Info") rich_Logs.AppendText(e.EventMessage);
+                    if (key == "Debug") rich_Logs.AppendText(e.EventMessage, Color.Gray);
+                    if (key == "Warring") rich_Logs.AppendText(e.EventMessage, Color.Orange);
+                    if (key == "Error") rich_Logs.AppendText(e.EventMessage, Color.Red);
+                });
+            }
         }
 
         private void chckBox_DebugMode_CheckedChanged(object sender, EventArgs e)
@@ -98,20 +147,7 @@ namespace Server_Chat
         private void Timer_Time_Tick(object sender, EventArgs e)
         {
             l_Time.Text = DateTime.Now.ToString();
-            foreach (var item in Sqlite.UsersList)
-            {
-                if (item.tcpClient == null) return;
-                else
-                {
-                    foreach (string _item in listB_UsersOnline.Items)
-                    {
-                        if (_item.Contains(item.full_name))
-                        {
-                            //_item += "[Online]";
-                        }
-                    }
-                }
-            }
+            
         }
 
         private void rich_Logs_TextChanged(object sender, EventArgs e)
@@ -119,7 +155,12 @@ namespace Server_Chat
             rich_Logs.SelectionStart = rich_Logs.Text.Length;
             rich_Logs.ScrollToCaret();
         }
-        
+
+        private void createUsersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Может не до конца рабатать");
+
+        }
     }
     public static class RichTextBoxExtensions
     {
