@@ -15,5 +15,12 @@ namespace Server_Chat
                 return "OnSetOnlineStatus";
             }
          }
+        public static string CurrentUserFullName
+        {
+            get
+            {
+                return "OnCurrentUserFullName";
+            }
+        }
     }
 }
