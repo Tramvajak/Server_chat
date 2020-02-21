@@ -51,23 +51,24 @@ namespace Server_Chat
             StreamWriter swSender = new StreamWriter(foundUser.tcpClient.GetStream());
             swSender.WriteLine("Connection true");
             swSender.Flush();
+            //swSender.WriteLine("")
+            OnStreamWriter(foundUser.tcpClient, foundUser.full_name + ";" + Commands.onCurrentUserFullName);
             swSender = null;
             Debug.WriteLineEvent(Commands.SetOnlineStatus, foundUser.full_name + "|" + "Online");
         }
         public static void OnSendMessageToClient(string client, string nameSendTo,string message)
         {
+            client = client.Replace("[Online]", String.Empty);
+            nameSendTo = nameSendTo.Replace("[Online]", String.Empty);
             var foundClient = Sqlite.UsersList.Find(item => item.full_name == client);
             var foundClientSendTo = Sqlite.UsersList.Find(item => item.full_name == nameSendTo);
             try
             {
-                StreamWriter swSender = new StreamWriter(foundClientSendTo.tcpClient.GetStream());
-                swSender.WriteLine();
-                swSender.Flush();
-                swSender = null;
+                OnStreamWriter(foundClientSendTo.tcpClient, foundClient.full_name + ";" + foundClientSendTo.full_name + "|" + message);
             }
             catch(Exception ex)
             {
-                Debug.WriteLine(3, "OnSendMessageToClietn message: "+ex.Message);
+                Debug.WriteLine(3, "OnSendMessageToClient message: "+ex.Message);
             }
         }
         public void StartListening()
@@ -124,12 +125,15 @@ namespace Server_Chat
                     //{
                     //Debug.WriteLineEvent(Commands.SetOnlineStatus,"testusername|Status");
                     if (item.tcpClient == null) continue;
+                   
                     try
                     {
                         //StreamWriter swSender = new StreamWriter(item.tcpClient.GetStream());
                         //swSender.WriteLine("TestConnections");
                         //swSender.Flush();
                         //swSender = null;
+                        //OnStreamWriter(item.tcpClient,item.full_name + ";" + Commands.onListClientOnline);
+
                         if (item.tcpClient.Client.Poll(0, SelectMode.SelectRead))
                         {
                             if (item.tcpClient.Client.Receive(new byte[1], SocketFlags.Peek) == 0)
@@ -139,8 +143,8 @@ namespace Server_Chat
                         }
                     }
                     catch (Exception ex)
-                    {
-                        
+                    {                  
+                        //OnStreamWriter(item.tcpClient,item.full_name + ";" + Commands.onListClientOffline);
                         Debug.WriteLineEvent(Commands.SetOnlineStatus, item.full_name + "|" + "Offline");
                         item.tcpClient = null;
                         Debug.WriteLine(2, "Client disconected to timeout " + item.login);
@@ -149,6 +153,67 @@ namespace Server_Chat
                     }
                 }
                 Thread.Sleep(1200);
+                //OnClientsStatusOnline();
+            }
+        }
+        public static void OnStreamWriter(TcpClient client,string message)
+        {
+            try
+            {
+                StreamWriter swSender = new StreamWriter(client.GetStream());
+                swSender.WriteLine(message);
+                swSender.Flush();
+                swSender = null;
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(3, "OnStreamWriter send:" + message + "; error:" + ex.Message);
+                throw;
+            }
+            
+        }
+        public static void OnClientsStatusOnline()
+        {
+            try
+            {
+                foreach (var item in Sqlite.UsersList)
+                {
+                    if (item.tcpClient == null) continue;
+                    for (int i = 0; i < Sqlite.UsersList.Count; i++)
+                    {
+                        if (Sqlite.UsersList[i].online == "1")
+                            OnStreamWriter(item.tcpClient, Sqlite.UsersList[i].full_name + ";" + Commands.onListClientOnline);
+                        if (Sqlite.UsersList[i].online == "0")
+                            OnStreamWriter(item.tcpClient, Sqlite.UsersList[i].full_name + ";" + Commands.onListClientOffline);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+
+            }
+        }
+        public static void OnClientsStatusOnline(string name, string status)
+        {
+            try
+            {
+                var foundClient = Sqlite.UsersList.Find(item => item.full_name == name);
+                foreach (var item in Sqlite.UsersList)
+                {
+                    if (item.tcpClient == null || item.full_name == name) continue;
+                    if (status == "1")
+                        OnStreamWriter(item.tcpClient, foundClient.full_name + ";" + Commands.onListClientOnline);
+                    if (status == "0")
+                        OnStreamWriter(item.tcpClient, foundClient.full_name + ";" + Commands.onListClientOffline);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+
             }
         }
         public static void OnClientListLoad(TcpClient client)
@@ -158,6 +223,8 @@ namespace Server_Chat
                 StreamWriter swSender = new StreamWriter(client.GetStream());
                 foreach (var item in Sqlite.UsersList)
                 {
+                    string fullname = item.full_name;
+                    //if (item.tcpClient != null) fullname += "[Online]";
                     swSender.WriteLine(item.full_name + ";OnListClientAdd");
                     swSender.Flush();
                 }

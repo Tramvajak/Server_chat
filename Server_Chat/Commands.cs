@@ -12,8 +12,31 @@ namespace Server_Chat
         {
             get
             {
-                return "OnSetOnlineStatus";
+                return "OnSetClientOnlineStatus";
             }
          }
+        public static string onListClientOnline // new
+        {
+            get
+            {
+                return "OnListClientOnline";
+            }
+        }
+        public static string onListClientOffline // new
+        {
+            get
+            {
+                return "OnListClientOffline";
+            }
+        }
+        public static string onCurrentUserFullName // new
+        {
+            get
+            {
+                return "OnCurrentUserFullName";
+            }
+        }
+
+
     }
 }

@@ -60,6 +60,7 @@ namespace Server_Chat
                             swSender.Flush();
                             Server.AddUser(tcpClient, mess[0]);
                             Server.OnClientListLoad(tcpClient);
+                            Server.OnClientsStatusOnline();
                         }
                         else
                         {

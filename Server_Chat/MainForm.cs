@@ -19,7 +19,7 @@ namespace Server_Chat
             InitializeComponent();
             chckBox_DebugMode.CheckState = CheckState.Checked;
             chckBox_DebugMode.Enabled = true;
-
+            //Debug.WriteLine("test");
         }
         
         private void btn_StartServer_Click(object sender, EventArgs e)
@@ -48,7 +48,7 @@ namespace Server_Chat
 
             //}
         }
-        private void OnSetOnlineStatus(string name,string status)
+        private void OnSetClientOnlineStatus(string name,string status)
         {
             if(status =="Online")
             {
@@ -59,6 +59,7 @@ namespace Server_Chat
                     {
                         foundUser.online = "1";
                         listB_UsersOnline.Items[i] += "[Online]";
+                        Server.OnClientsStatusOnline(foundUser.full_name, foundUser.online);
                         return;
                     }
                 }
@@ -73,10 +74,12 @@ namespace Server_Chat
                     {
                         foundUser.online = "0";
                         listB_UsersOnline.Items[i] = foundUser.full_name;
+                        Server.OnClientsStatusOnline(foundUser.full_name, foundUser.online);
                         return;
                     }
                 }
             }
+
         }
         
         private void Log_StatusChanged(object sender, StatusChangedEventArgs e)// объявить что бы принять сообщение
@@ -90,7 +93,7 @@ namespace Server_Chat
                     string[] text = _msg[2].Split('|');
                     Invoke((MethodInvoker)delegate ()
                     {
-                        OnSetOnlineStatus(text[0], text[1]);
+                        OnSetClientOnlineStatus(text[0], text[1]);
                     });
                 }
             }
