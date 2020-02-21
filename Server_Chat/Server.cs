@@ -54,7 +54,37 @@ namespace Server_Chat
             //swSender.WriteLine("")
             OnStreamWriter(foundUser.tcpClient, foundUser.full_name + ";" + Commands.onCurrentUserFullName);
             swSender = null;
+            
             Debug.WriteLineEvent(Commands.SetOnlineStatus, foundUser.full_name + "|" + "Online");
+        }
+        public static void OnClientListSetOnline(string name, string key)
+        {
+            try
+            {
+                for (int i = 0; i < Sqlite.UsersList.Count; i++)
+                {
+                    var clinet = Sqlite.UsersList[i];
+                    if (clinet.tcpClient == null) continue;
+                    if(key == "setOnline")
+                    {
+                        StreamWriter swSender = new StreamWriter(clinet.tcpClient.GetStream());
+                        swSender.WriteLine(clinet.full_name + ";OnListClientOnline");
+                        swSender.Flush();
+                        swSender = null;
+                    }
+                    if(key == "setOffine")
+                    {
+                        StreamWriter swSender = new StreamWriter(clinet.tcpClient.GetStream());
+                        swSender.WriteLine(clinet.full_name + ";OnListClientOffline");
+                        swSender.Flush();
+                        swSender = null;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
         public static void OnSendMessageToClient(string client, string nameSendTo,string message)
         {
@@ -69,6 +99,22 @@ namespace Server_Chat
             catch(Exception ex)
             {
                 Debug.WriteLine(3, "OnSendMessageToClient message: "+ex.Message);
+            }
+        }
+        public static void OnSendCurrentFullNameUser(TcpClient client,string login)
+        {
+            var foundClient = Sqlite.UsersList.Find(item => item.login == login);
+            try
+            {
+                StreamWriter swSender = new StreamWriter(foundClient.tcpClient.GetStream());
+
+                swSender.WriteLine(foundClient.full_name + ";" + Commands.CurrentUserFullName);
+                swSender.Flush();
+                swSender = null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(2, Commands.CurrentUserFullName + " " + ex.Message);
             }
         }
         public void StartListening()
@@ -147,6 +193,7 @@ namespace Server_Chat
                         //OnStreamWriter(item.tcpClient,item.full_name + ";" + Commands.onListClientOffline);
                         Debug.WriteLineEvent(Commands.SetOnlineStatus, item.full_name + "|" + "Offline");
                         item.tcpClient = null;
+                        OnClientListSetOnline(item.full_name, "setOffline");
                         Debug.WriteLine(2, "Client disconected to timeout " + item.login);
                         Debug.WriteLine(0, "Client error timeout: " + ex.Message);
                         continue;
