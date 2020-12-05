@@ -35,8 +35,6 @@ namespace Server_Chat
             {
                 return "OnCurrentUserFullName";
             }
-        }
-
-
+         }
     }
 }
