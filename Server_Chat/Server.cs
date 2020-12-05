@@ -40,9 +40,16 @@ namespace Server_Chat
         }
         public static bool CheckConnectedUser(string name)
         {
-            var foundUser = Sqlite.UsersList.Find(item => item.login == name);
-            if (foundUser.tcpClient == null) return false;
-            else return true;
+            try
+            {
+                var foundUser = Sqlite.UsersList.Find(item => item.login == name);
+                if (foundUser.tcpClient == null) return false;
+                else return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
         public static void AddUser(TcpClient client, string name)
         {
