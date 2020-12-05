@@ -108,13 +108,13 @@ namespace Server_Chat
             {
                 StreamWriter swSender = new StreamWriter(foundClient.tcpClient.GetStream());
 
-                swSender.WriteLine(foundClient.full_name + ";" + Commands.CurrentUserFullName);
+                swSender.WriteLine(foundClient.full_name + ";" + Commands.onCurrentUserFullName);
                 swSender.Flush();
                 swSender = null;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(2, Commands.CurrentUserFullName + " " + ex.Message);
+                Debug.WriteLine(2, Commands.onCurrentUserFullName + " " + ex.Message);
             }
         }
         public void StartListening()
@@ -162,7 +162,7 @@ namespace Server_Chat
            while(true)
             {
                 //Debug.WriteLine(0, "while true 1");
-                if (Sqlite.UsersList.Count == 0) return;
+                //if (Sqlite.UsersList.Count == 0) return;
                 for (int i = 0; i < Sqlite.UsersList.Count; i++)
                 {
                     //Debug.WriteLine(0, "while true for 1");
@@ -171,7 +171,13 @@ namespace Server_Chat
                     //{
                     //Debug.WriteLineEvent(Commands.SetOnlineStatus,"testusername|Status");
                     if (item.tcpClient == null) continue;
-                   
+                    if (item.online == "0")
+                    {
+                        item.online = "1";
+                        Debug.WriteLineEvent(Commands.SetOnlineStatus, item.full_name + "|" + "Online");
+                        
+                    }
+                    
                     try
                     {
                         //StreamWriter swSender = new StreamWriter(item.tcpClient.GetStream());
@@ -179,7 +185,6 @@ namespace Server_Chat
                         //swSender.Flush();
                         //swSender = null;
                         //OnStreamWriter(item.tcpClient,item.full_name + ";" + Commands.onListClientOnline);
-
                         if (item.tcpClient.Client.Poll(0, SelectMode.SelectRead))
                         {
                             if (item.tcpClient.Client.Receive(new byte[1], SocketFlags.Peek) == 0)
@@ -192,6 +197,7 @@ namespace Server_Chat
                     {                  
                         //OnStreamWriter(item.tcpClient,item.full_name + ";" + Commands.onListClientOffline);
                         Debug.WriteLineEvent(Commands.SetOnlineStatus, item.full_name + "|" + "Offline");
+                        item.online = "0";
                         item.tcpClient = null;
                         OnClientListSetOnline(item.full_name, "setOffline");
                         Debug.WriteLine(2, "Client disconected to timeout " + item.login);
@@ -199,8 +205,8 @@ namespace Server_Chat
                         continue;
                     }
                 }
-                Thread.Sleep(1200);
-                //OnClientsStatusOnline();
+                Task.Factory.StartNew(() => { OnClientsStatusOnline(); });
+                Thread.Sleep(1200);   
             }
         }
         public static void OnStreamWriter(TcpClient client,string message)
@@ -215,7 +221,7 @@ namespace Server_Chat
             catch(Exception ex)
             {
                 Debug.WriteLine(3, "OnStreamWriter send:" + message + "; error:" + ex.Message);
-                throw;
+                //throw;
             }
             
         }
@@ -232,6 +238,7 @@ namespace Server_Chat
                             OnStreamWriter(item.tcpClient, Sqlite.UsersList[i].full_name + ";" + Commands.onListClientOnline);
                         if (Sqlite.UsersList[i].online == "0")
                             OnStreamWriter(item.tcpClient, Sqlite.UsersList[i].full_name + ";" + Commands.onListClientOffline);
+
                     }
 
                 }
@@ -254,7 +261,7 @@ namespace Server_Chat
                         OnStreamWriter(item.tcpClient, foundClient.full_name + ";" + Commands.onListClientOnline);
                     if (status == "0")
                         OnStreamWriter(item.tcpClient, foundClient.full_name + ";" + Commands.onListClientOffline);
-
+                    
                 }
             }
             catch (Exception ex)

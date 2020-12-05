@@ -60,6 +60,7 @@ namespace Server_Chat
                         foundUser.online = "1";
                         listB_UsersOnline.Items[i] += "[Online]";
                         Server.OnClientsStatusOnline(foundUser.full_name, foundUser.online);
+                        Sqlite.Update_Parametrs(foundUser.id, online: foundUser.online);
                         return;
                     }
                 }
@@ -75,10 +76,12 @@ namespace Server_Chat
                         foundUser.online = "0";
                         listB_UsersOnline.Items[i] = foundUser.full_name;
                         Server.OnClientsStatusOnline(foundUser.full_name, foundUser.online);
+                        Sqlite.Update_Parametrs(foundUser.id, online: foundUser.online);
                         return;
                     }
                 }
             }
+
 
         }
         
@@ -127,23 +130,22 @@ namespace Server_Chat
 
         private void listB_UsersOnline_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listB_UsersOnline.SelectedIndex == -1) return;
-            Debug.WriteLine(0, "List Box Users selected index " + listB_UsersOnline.SelectedIndex.ToString());
-            Debug.WriteLine(0, "Open Selected User form " + listB_UsersOnline.Items[listB_UsersOnline.SelectedIndex]);
-             var user = Sqlite.UsersList.ElementAt(listB_UsersOnline.SelectedIndex);
-            SelectedUserForm suf = new SelectedUserForm(user.login,user.full_name,user.date_reg,user.online,user.last_ip,user.adminlevel.ToString());
-            if(suf.ShowDialog(this) == DialogResult.OK)
-            {
-
-            }
+            
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            createUsersToolStripMenuItem.Enabled = false;
             Sqlite.TestBase();
             foreach (var item in Sqlite.UsersList)
             {
+                if(item.online == "1")
+                {
+                    Sqlite.Update_Parametrs(item.id, online: "0");
+                    item.online = "0";
+                }
                 listB_UsersOnline.Items.Add(item.full_name);
+                
             }
         }
 
@@ -161,8 +163,34 @@ namespace Server_Chat
 
         private void createUsersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Может не до конца рабатать");
+            //MessageBox.Show("Может не до конца рабатать");
 
+        }
+
+        private void btn_UpdateUsers_Click(object sender, EventArgs e)
+        {
+            listB_UsersOnline.Items.Clear();
+            Sqlite.UsersList.Clear();
+            Sqlite.TestBase();
+            foreach (var item in Sqlite.UsersList)
+            {
+                string name = item.full_name;
+                if (item.online == "1") name += "[Online]";
+                listB_UsersOnline.Items.Add(name);
+            }
+        }
+
+        private void listB_UsersOnline_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (listB_UsersOnline.SelectedIndex == -1) return;
+            Debug.WriteLine(0, "List Box Users selected index " + listB_UsersOnline.SelectedIndex.ToString());
+            Debug.WriteLine(0, "Open Selected User form " + listB_UsersOnline.Items[listB_UsersOnline.SelectedIndex]);
+            var user = Sqlite.UsersList.ElementAt(listB_UsersOnline.SelectedIndex);
+            SelectedUserForm suf = new SelectedUserForm(user.id, user.login, user.full_name, user.date_reg, user.online, user.last_ip, user.adminlevel.ToString());
+            if (suf.ShowDialog(this) == DialogResult.OK)
+            {
+
+            }
         }
     }
     public static class RichTextBoxExtensions

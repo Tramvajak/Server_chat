@@ -9,7 +9,7 @@ namespace Server_Chat
 {
     class Users
     {
-
+        public string id { get; set; }
         public string login { get; set; }
         public string full_name { get; set; }
         public string date_reg { get; set; }
@@ -20,8 +20,9 @@ namespace Server_Chat
         //private string last_ip; //нужно реализовать
 
 
-        public Users(string login, string full_name, string date_reg, string online, string last_ip,int adminlevel)
+        public Users(string id, string login, string full_name, string date_reg, string online, string last_ip,int adminlevel)
         {
+            this.id = id;
             this.login = login;
             this.full_name = full_name;    
             this.date_reg = date_reg;

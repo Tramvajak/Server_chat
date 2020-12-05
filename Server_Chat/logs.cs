@@ -64,10 +64,10 @@ namespace Server_Chat
             try
             {
                 string msg = String.Format("[" + DateTime.Now + "] " + line + Environment.NewLine);
-                if (key == 0) msg = String.Format("[" + DateTime.Now + "] [Debug] " + line);// Environment.NewLine
-                if (key == 1) msg = String.Format("[" + DateTime.Now + "] [Info] " + line );
-                if (key == 2) msg = String.Format("[" + DateTime.Now + "] [Warring] " + line);
-                if (key == 3) msg = String.Format("[" + DateTime.Now + "] [Error] " + line);
+                if (key == 0) msg = String.Format("[" + DateTime.Now + "] [Debug] " + line + Environment.NewLine);// Environment.NewLine
+                if (key == 1) msg = String.Format("[" + DateTime.Now + "] [Info] " + line + Environment.NewLine);
+                if (key == 2) msg = String.Format("[" + DateTime.Now + "] [Warring] " + line + Environment.NewLine);
+                if (key == 3) msg = String.Format("[" + DateTime.Now + "] [Error] " + line + Environment.NewLine);
                 //File.AppendAllText(_logPath, msg);
                 blockCollent.Add(msg);
                 e = new StatusChangedEventArgs(msg); // что бы отправить 

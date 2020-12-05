@@ -38,14 +38,16 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createUsersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btn_UpdateUsers = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_StartServer
             // 
-            this.btn_StartServer.Location = new System.Drawing.Point(407, 253);
+            this.btn_StartServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_StartServer.Location = new System.Drawing.Point(12, 285);
             this.btn_StartServer.Name = "btn_StartServer";
-            this.btn_StartServer.Size = new System.Drawing.Size(75, 23);
+            this.btn_StartServer.Size = new System.Drawing.Size(82, 23);
             this.btn_StartServer.TabIndex = 0;
             this.btn_StartServer.Text = "StartServer";
             this.btn_StartServer.UseVisualStyleBackColor = true;
@@ -53,18 +55,22 @@
             // 
             // rich_Logs
             // 
-            this.rich_Logs.Location = new System.Drawing.Point(215, 27);
+            this.rich_Logs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rich_Logs.Location = new System.Drawing.Point(191, 27);
             this.rich_Logs.Name = "rich_Logs";
-            this.rich_Logs.Size = new System.Drawing.Size(383, 203);
+            this.rich_Logs.Size = new System.Drawing.Size(407, 203);
             this.rich_Logs.TabIndex = 2;
             this.rich_Logs.Text = "";
             this.rich_Logs.TextChanged += new System.EventHandler(this.rich_Logs_TextChanged);
             // 
             // chckBox_DebugMode
             // 
+            this.chckBox_DebugMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.chckBox_DebugMode.AutoSize = true;
             this.chckBox_DebugMode.Enabled = false;
-            this.chckBox_DebugMode.Location = new System.Drawing.Point(128, 253);
+            this.chckBox_DebugMode.Location = new System.Drawing.Point(128, 238);
             this.chckBox_DebugMode.Name = "chckBox_DebugMode";
             this.chckBox_DebugMode.Size = new System.Drawing.Size(85, 17);
             this.chckBox_DebugMode.TabIndex = 3;
@@ -74,17 +80,21 @@
             // 
             // listB_UsersOnline
             // 
+            this.listB_UsersOnline.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listB_UsersOnline.FormattingEnabled = true;
             this.listB_UsersOnline.Location = new System.Drawing.Point(12, 27);
             this.listB_UsersOnline.Name = "listB_UsersOnline";
-            this.listB_UsersOnline.Size = new System.Drawing.Size(197, 199);
+            this.listB_UsersOnline.Size = new System.Drawing.Size(173, 199);
             this.listB_UsersOnline.TabIndex = 4;
             this.listB_UsersOnline.SelectedIndexChanged += new System.EventHandler(this.listB_UsersOnline_SelectedIndexChanged);
+            this.listB_UsersOnline.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listB_UsersOnline_MouseDoubleClick);
             // 
             // l_Time
             // 
+            this.l_Time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.l_Time.AutoSize = true;
-            this.l_Time.Location = new System.Drawing.Point(125, 295);
+            this.l_Time.Location = new System.Drawing.Point(125, 290);
             this.l_Time.Name = "l_Time";
             this.l_Time.Size = new System.Drawing.Size(28, 13);
             this.l_Time.TabIndex = 5;
@@ -117,15 +127,27 @@
             // createUsersToolStripMenuItem
             // 
             this.createUsersToolStripMenuItem.Name = "createUsersToolStripMenuItem";
-            this.createUsersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.createUsersToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.createUsersToolStripMenuItem.Text = "Create Users";
             this.createUsersToolStripMenuItem.Click += new System.EventHandler(this.createUsersToolStripMenuItem_Click);
+            // 
+            // btn_UpdateUsers
+            // 
+            this.btn_UpdateUsers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_UpdateUsers.Location = new System.Drawing.Point(12, 232);
+            this.btn_UpdateUsers.Name = "btn_UpdateUsers";
+            this.btn_UpdateUsers.Size = new System.Drawing.Size(82, 23);
+            this.btn_UpdateUsers.TabIndex = 7;
+            this.btn_UpdateUsers.Text = "Update Users";
+            this.btn_UpdateUsers.UseVisualStyleBackColor = true;
+            this.btn_UpdateUsers.Click += new System.EventHandler(this.btn_UpdateUsers_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 352);
+            this.Controls.Add(this.btn_UpdateUsers);
             this.Controls.Add(this.l_Time);
             this.Controls.Add(this.listB_UsersOnline);
             this.Controls.Add(this.chckBox_DebugMode);
@@ -133,6 +155,7 @@
             this.Controls.Add(this.btn_StartServer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(638, 391);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -154,6 +177,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createUsersToolStripMenuItem;
+        private System.Windows.Forms.Button btn_UpdateUsers;
     }
 }
 

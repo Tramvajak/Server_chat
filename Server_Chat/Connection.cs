@@ -96,6 +96,7 @@ namespace Server_Chat
                 //=================================Конец========================================
                 catch (Exception ex)
                 {
+                    CloseConnecion();
                     Debug.WriteLine(3, ex.Message);
                 }
             }
